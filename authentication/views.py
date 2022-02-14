@@ -8,8 +8,8 @@ import wsapi
 
 
 @wsapi.add_callback("authentication.token")
-def login_by_token(token: str, **kwargs) -> Token:
-    saved = Token.objects.get(token=token)
+def login_by_token(scope: dict, **kwargs) -> Token:
+    saved = Token.objects.get(token=kwargs.get("token", ""))
     return saved
 
 
