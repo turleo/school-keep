@@ -5,16 +5,17 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 
 class ApiConsumer(AsyncWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.user = None
+
     async def connect(self):
-        from django.contrib.auth.models import AnonymousUser
         await self.accept()
-        if self.scope["user"] == AnonymousUser():
-            await self.send(json.dumps({"event": "authentication.auth"}))
+        await self.send(json.dumps({"event": "authentication.auth"}))
 
     async def receive(self, text_data=None, bytes_data=None):
-        from django.contrib.auth.models import AnonymousUser
         message = json.loads(text_data)
-        if self.scope["user"] == AnonymousUser() and message['event'].startswith('authentication'):
+        if self.user is None and message['event'].startswith('authentication'):
             token = callbacks[message['event']](self.scope, **message)
             if token is None:
                 await self.send(json.dumps({"event": "authentication.error"}))
@@ -22,7 +23,7 @@ class ApiConsumer(AsyncWebsocketConsumer):
             await login(self.scope, token.user)
             self.scope["session"].save()
             await self.send(json.dumps({"event": "authentication.token", "token": token.token}))
-        elif self.scope["user"] == AnonymousUser():
+        elif self.user is None:
             await self.close()
         elif message['event'] == 'authentication.logout':
             await logout(self.scope)
