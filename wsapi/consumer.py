@@ -20,8 +20,9 @@ class ApiConsumer(AsyncWebsocketConsumer):
             if token is None:
                 await self.send(json.dumps({"event": "authentication.error"}))
                 return
-            await login(self.scope, token.user)
-            self.scope["session"].save()
+            self.user = token.user
+            token.last_ip = self.scope['client'][0]
+            token.save()
             await self.send(json.dumps({"event": "authentication.token", "token": token.token}))
         elif self.user is None:
             await self.close()
