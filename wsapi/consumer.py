@@ -31,7 +31,9 @@ class ApiConsumer(AsyncWebsocketConsumer):
             await self.close()
         else:
             self.scope['user'] = self.user
-            await self.send(callbacks[message['event']](self.scope, **message))
+            answer = callbacks[message['event']](self.scope, **message)
+            answer = json.dumps(answer)
+            await self.send(answer)
 
     async def disconnect(self, code):
         pass
