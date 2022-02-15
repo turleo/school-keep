@@ -30,6 +30,7 @@ class ApiConsumer(AsyncWebsocketConsumer):
             await logout(self.scope)
             await self.close()
         else:
+            self.scope['user'] = self.user
             await self.send(callbacks[message['event']](self.scope, **message))
 
     async def disconnect(self, code):
