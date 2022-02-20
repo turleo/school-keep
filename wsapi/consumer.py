@@ -15,7 +15,7 @@ class ApiConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         message = json.loads(text_data)
-        if self.user is None and message['event'].startswith('authentication'):
+        if message['event'].startswith('authentication'):
             token = callbacks[message['event']](self.scope, **message)
             if token is None:
                 await self.send(json.dumps({"event": "authentication.error"}))
@@ -25,13 +25,13 @@ class ApiConsumer(AsyncWebsocketConsumer):
             token.save()
             await self.send(json.dumps({"event": "authentication.token", "token": token.token}))
         elif self.user is None:
-            await self.close()
+            await self.send(json.dumps({"event": "authentication.auth"}))
         elif message['event'] == 'authentication.logout':
             await logout(self.scope)
             await self.close()
         else:
             self.scope['user'] = self.user
-            answer = callbacks[message['event']](self.scope, **message)
+            answer = callbacks.get(message['event'], lambda x, **kwargs: "Oops")(self.scope, **message)
             answer = json.dumps(answer)
             await self.send(answer)
 
