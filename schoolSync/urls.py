@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import authentication.views
-import timetable.lessons
+import timetable.bells
+import timetable.subjects
 
 urlpatterns = [
     path('admin/', admin.site.urls),

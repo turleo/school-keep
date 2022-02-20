@@ -19,3 +19,18 @@ class Lesson(models.Model):
         }
         return out
 
+class Subject(models.Model):
+    title = models.CharField(max_length=20)
+    icon = models.CharField(max_length=1)  # emoji
+    room = models.CharField(max_length=5)
+    teacher = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def toJSON(self):
+        out = {
+            "id": str(self.id),
+            "start": str(self.start),
+            "end": str(self.end),
+            "days": self.days.split(',')
+        }
+        return out

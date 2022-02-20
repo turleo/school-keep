@@ -12,22 +12,6 @@ def fetch(scope: dict, **kwargs) -> list:
     return list(map(lambda x: x.toJSON(), lessons))
 
 
-@wsapi.add_callback("timetable.lessons.add")
-def add(scope: dict, **kwargs) -> list:
-    start = kwargs.get("start")
-    end = kwargs.get("end")
-    days = kwargs.get("days")
-
-    lesson = Lesson(
-        start=start,
-        end=end,
-        days=days,
-        owner=scope['user']
-    )
-    lesson.save()
-    return wsapi.callbacks['timetable.lessons.fetch'](scope, **kwargs)
-
-
 @wsapi.add_callback("timetable.lessons.change")
 def change(scope: dict, **kwargs):
     bell_data = kwargs.get("data")
