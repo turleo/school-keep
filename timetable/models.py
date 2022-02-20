@@ -12,9 +12,10 @@ class Lesson(models.Model):
 
     def toJSON(self):
         out = {
+            "id": str(self.id),
             "start": str(self.start),
             "end": str(self.end),
-            "days": self.days
+            "days": self.days.split(',')
         }
         return out
 

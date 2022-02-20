@@ -1,5 +1,7 @@
 import time
 
+from django.core.exceptions import ObjectDoesNotExist
+
 import wsapi
 from timetable.models import Lesson
 
@@ -23,4 +25,29 @@ def add(scope: dict, **kwargs) -> list:
         owner=scope['user']
     )
     lesson.save()
+    return wsapi.callbacks['timetable.lessons.fetch'](scope, **kwargs)
+
+
+@wsapi.add_callback("timetable.lessons.change")
+def change(scope: dict, **kwargs):
+    bell_data = kwargs.get("data")
+    if bell_data.get("id", 0) == 0:
+        bell = Lesson(start=bell_data['start'], end=bell_data['end'], days=",".join(bell_data['days']), owner=scope['user'])
+    else:
+        bell = Lesson.objects.get(pk=bell_data['id'])
+        bell.start = bell_data['start']
+        bell.end = bell_data['end']
+        bell.days = ",".join(bell_data['days'])
+    bell.save()
+    return wsapi.callbacks['timetable.lessons.fetch'](scope, **kwargs)
+
+
+@wsapi.add_callback("timetable.lessons.delete")
+def delete(scope: dict, **kwargs):
+    try:
+        bell_id = kwargs.get("id", 0)
+        bell = Lesson.objects.get(pk=bell_id)
+        bell.delete()
+    except ObjectDoesNotExist:
+        pass
     return wsapi.callbacks['timetable.lessons.fetch'](scope, **kwargs)
