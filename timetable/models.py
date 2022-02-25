@@ -29,8 +29,9 @@ class Subject(models.Model):
     def toJSON(self):
         out = {
             "id": str(self.id),
-            "start": str(self.start),
-            "end": str(self.end),
-            "days": self.days.split(',')
+            "title": str(self.title),
+            "icon": str(self.icon),
+            "room": str(self.room),
+            "teacher": str(self.teacher),
         }
         return out
