@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Lesson(models.Model):
+class Bell(models.Model):
     start = models.TimeField()
     end = models.TimeField()
     days = models.CharField(max_length=20)  # coma separated two first symbols of days of the week
@@ -35,3 +35,4 @@ class Subject(models.Model):
             "teacher": str(self.teacher),
         }
         return out
+
