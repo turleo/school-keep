@@ -23,7 +23,10 @@ class ApiConsumer(AsyncWebsocketConsumer):
             self.user = token.user
             token.last_ip = self.scope['client'][0]
             token.save()
-            await self.send(json.dumps({"event": "authentication.token", "token": token.token}))
+            if token is None:
+                await self.send(json.dumps({"event": "authentication.error"}))
+            else:
+                await self.send(json.dumps({"event": "authentication.token", "token": token.token}))
         elif self.user is None:
             await self.send(json.dumps({"event": "authentication.auth"}))
         elif message['event'] == 'authentication.logout':

@@ -1,16 +1,21 @@
 import uuid
-from typing import Optional
+from typing import Optional, Dict
 
 from django.contrib.auth import authenticate
+from django.core.exceptions import ObjectDoesNotExist
+
 from .models import Token
 
 import wsapi
 
 
 @wsapi.add_callback("authentication.token")
-def login_by_token(scope: dict, **kwargs) -> Token:
-    saved = Token.objects.get(token=kwargs.get("token", ""))
-    return saved
+def login_by_token(scope: dict, **kwargs):
+    try:
+        saved = Token.objects.get(token=kwargs.get("token", ""))
+        return saved
+    except ObjectDoesNotExist:
+        return None
 
 
 @wsapi.add_callback("authentication.user")
