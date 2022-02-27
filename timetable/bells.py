@@ -7,9 +7,9 @@ from timetable.models import Bell
 
 
 @wsapi.add_callback("timetable.bells.fetch")
-def fetch(scope: dict, **kwargs) -> list:
+def fetch(scope: dict, **kwargs):
     lessons = Bell.objects.filter(owner=scope['user'])
-    return list(map(lambda x: x.toJSON(), lessons))
+    return {"event": "timetable.bells", "data": list(map(lambda x: x.toJSON(), lessons))}
 
 
 @wsapi.add_callback("timetable.bells.change")

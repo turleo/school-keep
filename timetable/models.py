@@ -36,3 +36,16 @@ class Subject(models.Model):
         }
         return out
 
+class Lesson(models.Model):
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    bell = models.ForeignKey(Bell, on_delete=models.CASCADE)
+    day = models.CharField(max_length=2)
+
+    def toJSON(self):
+        out = {
+            "id": str(self.id),
+            "subject": self.subject.toJSON(),
+            "bell": self.bell.toJSON(),
+            "day": str(self.day)
+        }
+        return out

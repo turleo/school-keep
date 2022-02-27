@@ -5,13 +5,13 @@ from timetable.models import Subject
 
 
 @wsapi.add_callback("timetable.subjects.fetch")
-def fetch(scope: dict, **kwargs) -> list:
+def fetch(scope: dict, **kwargs):
     subjects = Subject.objects.filter(owner=scope['user'])
-    return list(map(lambda x: x.toJSON(), subjects))
+    return {"event": "timetable.subjects", "data": list(map(lambda x: x.toJSON(), subjects))}
 
 
 @wsapi.add_callback("timetable.subjects.add")
-def add(scope: dict, **kwargs) -> list:
+def add(scope: dict, **kwargs):
     title = kwargs.get("title")
     icon = kwargs.get("icon", "")
     room = kwargs.get("room", "")
