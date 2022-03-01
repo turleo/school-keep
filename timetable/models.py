@@ -40,6 +40,7 @@ class Lesson(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     bell = models.ForeignKey(Bell, on_delete=models.CASCADE)
     day = models.CharField(max_length=2)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def toJSON(self):
         out = {
