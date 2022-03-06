@@ -36,6 +36,9 @@ class Subject(models.Model):
         }
         return out
 
+    def __str__(self):
+        return self.title
+
 class Lesson(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     bell = models.ForeignKey(Bell, on_delete=models.CASCADE)

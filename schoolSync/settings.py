@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'authentication',
+    'hometask',
     'timetable',
     'wsapi',
 ]
