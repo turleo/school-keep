@@ -14,9 +14,15 @@ def change_hometasks(scope: dict, **kwargs):
     hometask_id = kwargs.get("id", 0)
     if hometask_id != 0:
         hometasks = Hometask.objects.get(pk=hometask_id)
-        hometasks.subject_id = kwargs.get("subject")
+        hometasks.subject_id = kwargs["subject"]
         hometasks.deadline = kwargs["deadline"]
         hometasks.save()
+    else:
+        Hometask(
+            subject_id=kwargs["subject"],
+            deadline=kwargs["deadline"],
+            owner=scope['user']
+        ).save()
     return wsapi.callbacks['hometask.fetch'](scope, **kwargs)
 
 
@@ -29,4 +35,10 @@ def change_hometasks(scope: dict, **kwargs):
         task.text = kwargs["text"]
         task.done = kwargs["done"]
         task.save()
+    else:
+        Task(
+            hometask_id=kwargs["homework_id"],
+            text=kwargs["text"],
+            done=False
+        ).save()
     return wsapi.callbacks['hometask.fetch'](scope, **kwargs)
