@@ -2,6 +2,7 @@ import uuid
 from typing import Optional, Dict
 
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Token
@@ -20,7 +21,7 @@ def login_by_token(scope: dict, **kwargs):
 
 @wsapi.add_callback("authentication.user")
 def login_by_password(scope: dict, **kwargs) -> Optional[Token]:
-    user = authenticate(username=kwargs.get("username", ""),
+    user = authenticate(username=kwargs.get("username", "").replace("@", ""),
                         password=kwargs.get("password", ""))
     if user is None:
         return None
@@ -36,3 +37,15 @@ def login_by_password(scope: dict, **kwargs) -> Optional[Token]:
     )
     saved.save()
     return saved
+
+
+@wsapi.add_callback("authentication.register")
+def register(scope: dict, **kwargs) -> Optional[Token]:
+    email = kwargs.get("username")
+    password = kwargs.get("password")
+    if not email or not password:
+        return None
+    username = email.replace("@", "")
+    User.objects.create_user(username, email, password)
+
+    return wsapi.callbacks["authentication.user"](scope, **kwargs)
