@@ -21,8 +21,8 @@ class Bell(models.Model):
 
 class Subject(models.Model):
     title = models.CharField(max_length=50)
-    icon = models.CharField(max_length=1)  # emoji
-    room = models.CharField(max_length=5)
+    icon = models.CharField(max_length=5)  # very big emoji
+    room = models.CharField(max_length=10)
     teacher = models.CharField(max_length=200)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
