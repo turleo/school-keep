@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/static/precache-manifest.3a165f833b5d6b4e002935a434e8a792.js"
+  "/static/precache-manifest.6b4ac54444833f044e3e1df3a8779823.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "school-syns-front"});
