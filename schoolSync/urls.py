@@ -24,7 +24,10 @@ import timetable.bells
 import timetable.lessons
 import timetable.subjects
 
-urlpatterns = []
+urlpatterns = [
+    path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico')),
+    path('robots.txt', RedirectView.as_view(url='/static/robots.txt'))
+]
 
 
 def view_404(request, exception):
