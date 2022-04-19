@@ -14,16 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import path, include
 from django.views.generic import RedirectView
 
 import authentication.views
-import homepage.urls
 import hometask.views
 import timetable.bells
 import timetable.lessons
 import timetable.subjects
 
-urlpatterns = [
-    path('', include(homepage.urls)),
-]
+urlpatterns = []
+
+
+def view_404(request, exception):
+    return redirect('/static/index.html')
+
+
+handler404 = 'schoolSync.urls.view_404'
