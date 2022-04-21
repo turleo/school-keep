@@ -15,7 +15,7 @@ class ApiConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         message = json.loads(text_data)
-        if message['event'].startswith('authentication'):
+        if message['event'].startswith('authentication.'):
             token = callbacks[message['event']](self.scope, **message)
             if token is None:
                 await self.send(json.dumps({"event": "authentication.error"}))

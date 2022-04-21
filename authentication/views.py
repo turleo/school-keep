@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -49,3 +49,19 @@ def register(scope: dict, **kwargs) -> Optional[Token]:
     User.objects.create_user(username, email, password)
 
     return wsapi.callbacks["authentication.user"](scope, **kwargs)
+
+
+@wsapi.add_callback("authentication_info.devices")
+def register(scope: dict, **kwargs) -> List[Token]:
+    tokens = Token.objects.filter(user=scope['user'])
+    return list(map(Token.toJSON, tokens))
+
+
+@wsapi.add_callback("authentication_info.kick")
+def register(scope: dict, **kwargs) -> bool:
+    kwargs.get("id", 0)
+    token = Token.objects.get(pk=id)
+    if token.user is scope['user']:
+        token.delete()
+    return wsapi.callbacks["authentication_info.devices"](scope, **kwargs)
+
