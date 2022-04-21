@@ -28,7 +28,7 @@ def login_by_password(scope: dict, **kwargs) -> Optional[Token]:
     useragent = "bot"
     for i in scope['headers']:
         if i[0] == b'user-agent':
-            useragent = i[0].decode()
+            useragent = i[1].decode()
     saved = Token(
         user=user,
         last_ip=scope['client'][0],
